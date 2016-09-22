@@ -1,0 +1,14 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "typescript.tsdk": "node_modules/typescript/lib",   
+
+    "files.exclude": {
+        "app/**/*.js": { "when": "$(basename).ts"},
+        "app/**/*.js.map": true,
+        "app/**/*.d.ts": { "when": "$(basename).ts"},
+        "node_modules": true,
+        "hooks": true,
+        "platforms": true,
+        ".vscode": true
+    }
+}
