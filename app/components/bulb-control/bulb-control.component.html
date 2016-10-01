@@ -1,0 +1,35 @@
+<StackLayout>
+    <StackLayout orientation="horizontal">
+        <Label text="Light: " class="title"></Label>
+        <Switch [(ngModel)]="isLightOn">
+        </Switch>
+    </StackLayout>
+    
+    <Slider [minValue]="minValue" 
+            [maxValue]="maxValue" 
+            [(ngModel)]="redValue"
+            class="red">
+    </Slider>
+
+    <Slider [minValue]="minValue" 
+            [maxValue]="maxValue" 
+            [(ngModel)]="greenValue"
+            class="green">
+    </Slider>
+    
+    <Slider [minValue]="minValue" 
+            [maxValue]="maxValue" 
+            [(ngModel)]="blueValue"
+            class="blue">
+    </Slider>
+
+    <Slider [minValue]="minValue" 
+            [maxValue]="maxValue" 
+            [(ngModel)]="whiteValue"
+            class="white">
+    </Slider>
+
+    <Button (tap)="updateLightBulb()" 
+            text="Apply">
+    </Button>
+<StackLayout>

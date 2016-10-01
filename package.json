@@ -1,10 +1,10 @@
 {
   "description": "NativeScript Application",
-  "license": "SEE LICENSE IN <your-license-filename>",
+  "license": "MIT",
   "readme": "NativeScript Application",
-  "repository": "<fill-your-repository-here>",
+  "repository": "https://github.com/adrianfaciu/NativeScriptLightBulb",
   "nativescript": {
-    "id": "org.nativescript.NativeScriptSandbox",
+    "id": "org.nativescript.NativeScriptLightBulb",
     "tns-android": {
       "version": "2.3.0"
     }

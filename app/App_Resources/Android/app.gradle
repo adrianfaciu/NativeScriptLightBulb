@@ -8,7 +8,7 @@
 android {  
   defaultConfig {  
     generatedDensities = []
-    applicationId = "org.nativescript.NativeScriptSandbox"  
+    applicationId = "org.nativescript.NativeScriptLightBulb"  
   }  
   aaptOptions {  
     additionalParameters "--no-version-vectors"  

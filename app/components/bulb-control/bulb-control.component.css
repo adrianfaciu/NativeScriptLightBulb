@@ -1,0 +1,26 @@
+slider {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.green {
+    color: green;
+}
+
+.white {
+    color: dimgray;
+}
+
+button {
+    width: 100%;
+    margin-top: 40px;
+}
