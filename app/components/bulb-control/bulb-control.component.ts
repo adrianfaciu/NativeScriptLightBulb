@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LightBulbCommandService } from '../../services/lightbulb-command.service';
 
 @Component({
     moduleId: module.id,
@@ -16,10 +17,13 @@ export class BulbControlComponent {
     blueValue = 0;
     whiteValue = 0;
 
+    constructor(private lightBulbCommandService: LightBulbCommandService) {}
+
     updateLightBulb() {
-        console.log(this.isLightOn);
-        console.log(this.redValue);
-        console.log(this.greenValue);
-        console.log(this.redValue);
+       this.lightBulbCommandService.update(this.isLightOn, 
+                                           this.redValue, 
+                                           this.greenValue, 
+                                           this.blueValue, 
+                                           this.whiteValue);
     }
 }
