@@ -1,26 +1,64 @@
 import { Injectable } from '@angular/core';
 import { BluetoothService } from './bluetooth.service';
+import { BleDevice } from '../models/ble-device.model';
 
 @Injectable()
 export class LightBulbCommandService {
-    lightBulbUUID: string;
+    magicBlue: BleDevice;
 
     constructor(private bluetoothService: BluetoothService) { }
 
-    update(red: number, green: number, blue: number, white: number) {
-        const color = this.getColorValue(red, green, blue, white);
-
-        if (!this.bluetoothService.isConnected) {
-            this.bluetoothService.scan().then(() => {
-                this.lightBulbUUID = this.bluetoothService.getMagicBlue().UUID;
-                this.bluetoothService.write(this.lightBulbUUID, color);
-            })
-        } else {
-            this.bluetoothService.write(this.lightBulbUUID, color);
-        }
+    connectToMagicBlue() {
+        this.bluetoothService.scan().then(() => {
+            console.log('Scanning completed');
+            this.magicBlue = this.getMagicBlue();
+            if (this.magicBlue) {
+                console.log('Magic blue found');
+                this.bluetoothService.connect(this.magicBlue.UUID);
+            } else {
+                console.log('Device not found');
+            }
+        });
     }
 
-    getColorValue(red: number, green: number, blue: number, warmWhite: number) {
-        return new Uint8Array([0x56, red, green, blue, warmWhite, 0xf0, 0xaa]);
+    update(red: number, green: number, blue: number, white: number) {
+        if (!this.isConnected(this.magicBlue.UUID)) {
+            console.log('Not connected to device');
+            return;
+        }
+
+        const color = [red, green, blue, white].map(param => {
+            return this.convertToHexString(param);
+        }).join(",");
+
+        console.log('Updating the color:' + color);
+
+        const updateMessage = this.getMessage(this.magicBlue.UUID, color);
+        this.bluetoothService.write(updateMessage);
+    }
+
+    getMessage(UUID: string, value: string): any {
+        return {
+            peripheralUUID: UUID,
+            serviceUUID: 'ffe5',
+            characteristicUUID: 'ffe9',
+            value: value
+        };
+    }
+
+    isConnected(UUID: string): boolean {
+        const magicBlue = this.getMagicBlue();
+        console.log('Device: ' + JSON.stringify(magicBlue));
+
+        return magicBlue && magicBlue.UUID === UUID && magicBlue.state === 'connected';
+    }
+
+    getMagicBlue(): BleDevice {
+        return this.bluetoothService.bleDevicesAround
+            .filter(d => d.name && d.name.indexOf('LEDBLE') > -1)[0];
+    }
+
+    convertToHexString(code: number): string {
+        return "0x" + code.toString(16);
     }
 }

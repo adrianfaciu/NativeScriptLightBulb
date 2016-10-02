@@ -4,46 +4,56 @@ var bluetooth = require("nativescript-bluetooth");
 
 @Injectable()
 export class BluetoothService {
-    bleDevicesAround: Array<BleDevice>;
+    bleDevicesAround: Array<BleDevice> = new Array;
 
-    get magicBluesAround(): Array<BleDevice> {
-        return this.bleDevicesAround.filter(d => d.name.indexOf('LEDBLE') > -1);
+    write(bluetoothMessage): void {
+        console.log('Writing message: ' + JSON.stringify(bluetoothMessage));
+        bluetooth.write(bluetoothMessage)
+            .then((result) => console.log("value written " + JSON.stringify(result)),
+            (error) => console.log("write error: " + error));
     }
 
-    constructor() {
-        this.bleDevicesAround = new Array;
+    fixPermission(): void {
+        bluetooth.hasCoarseLocationPermission()
+            .then((granted) => {
+                console.log("Has location permission ? " + granted);
+
+                if (!granted) {
+                    bluetooth.requestCoarseLocationPermission()
+                        .then(() => console.log("Location permission requested"));
+                }
+            });
     }
 
-    isConnected(): boolean {
-        return this.bleDevicesAround.length > 0 && this.magicBluesAround.length > 0;
+    connect(UUID: string): Promise<any> {
+        return bluetooth.connect({
+            UUID: UUID,
+            onConnected: (peripheral) => {
+                console.log("Periperhal connected with UUID: " + peripheral.UUID);
+                peripheral.services.forEach(function (service) {
+                    console.log("Service found: " + JSON.stringify(service));
+                });
+            },
+            onDisconnected: (peripheral) => {
+                console.log("Periperhal disconnected with UUID: " + peripheral.UUID)
+            }
+        });
     }
 
-    write(UUID: string, value: Uint8Array) {
-        var bluetoothMessage: any = {
-            peripheralUUID: UUID,
-            serviceUUID: '0xffe5',
-            characteristicUUID: '0xffe9',
-            value: value.buffer
-        }
-
-        bluetooth.writeWithoutResponse(bluetoothMessage);
-    }
-
-    getMagicBlue(): BleDevice {
-        if (this.isConnected) {
-            return this.magicBluesAround[0];
-        } else {
-            return null;
-        }
+    disconnect(UUID: string): void {
+        bluetooth.disconnect({ UUID: UUID })
+            .then(() => console.log("Disconnected successfully"),
+            (err) => console.log("Disconnection error: " + err));
     }
 
     scan(): Promise<any> {
+        console.log('Scanning...');
         this.bleDevicesAround = new Array;
 
         return bluetooth.startScanning({
             serviceUUIDs: [],
             seconds: 3,
-            onDiscovered: device => {
+            onDiscovered: (device) => {
                 console.log("UUID: " + device.UUID);
                 console.log("Name: " + device.name);
                 console.log("State: " + device.state);
