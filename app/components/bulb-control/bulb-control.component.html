@@ -3,6 +3,10 @@
            class="title">
     </Label>
     
+    <Button (tap)="connectToMagicBlue()" 
+            text="Connect">
+    </Button>
+    
     <Slider [minValue]="minValue" 
             [maxValue]="maxValue" 
             [(ngModel)]="redValue"

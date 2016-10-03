@@ -14,7 +14,8 @@ export class LightBulbCommandService {
             this.magicBlue = this.getMagicBlue();
             if (this.magicBlue) {
                 console.log('Magic blue found');
-                this.bluetoothService.connect(this.magicBlue.UUID);
+                this.bluetoothService.connect(this.magicBlue.UUID)
+                    .then((device) => console.log('Connected: ' + JSON.stringify(device)));
             } else {
                 console.log('Device not found');
             }
@@ -22,12 +23,12 @@ export class LightBulbCommandService {
     }
 
     update(red: number, green: number, blue: number, white: number) {
-        if (!this.isConnected(this.magicBlue.UUID)) {
+        if (!this.magicBlue) {
             console.log('Not connected to device');
             return;
         }
 
-        const color = [red, green, blue, white].map(param => {
+        const color = [86, red, green, blue, white, 240, 170].map(param => {
             return this.convertToHexString(param);
         }).join(",");
 
@@ -44,13 +45,6 @@ export class LightBulbCommandService {
             characteristicUUID: 'ffe9',
             value: value
         };
-    }
-
-    isConnected(UUID: string): boolean {
-        const magicBlue = this.getMagicBlue();
-        console.log('Device: ' + JSON.stringify(magicBlue));
-
-        return magicBlue && magicBlue.UUID === UUID && magicBlue.state === 'connected';
     }
 
     getMagicBlue(): BleDevice {

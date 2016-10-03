@@ -18,17 +18,22 @@ export class BulbControlComponent implements OnInit {
     whiteValue = 0;
 
     constructor(private lightBulbCommandService: LightBulbCommandService,
-                private bluetoothService: BluetoothService) {}
+        private bluetoothService: BluetoothService) { }
 
-    ngOnInit() {
-        this.bluetoothService.fixPermission();
+    connectToMagicBlue() {
+        console.log('Connecting to device');
         this.lightBulbCommandService.connectToMagicBlue();
     }
 
+    ngOnInit() {
+        this.bluetoothService.fixPermission();
+    }
+
     updateLightBulb() {
-       this.lightBulbCommandService.update(this.redValue, 
-                                           this.greenValue, 
-                                           this.blueValue, 
-                                           this.whiteValue);
+        console.log('Update color');
+        this.lightBulbCommandService.update(this.redValue,
+            this.greenValue,
+            this.blueValue,
+            this.whiteValue);
     }
 }

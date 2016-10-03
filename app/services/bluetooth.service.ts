@@ -9,8 +9,8 @@ export class BluetoothService {
     write(bluetoothMessage): void {
         console.log('Writing message: ' + JSON.stringify(bluetoothMessage));
         bluetooth.write(bluetoothMessage)
-            .then((result) => console.log("value written " + JSON.stringify(result)),
-            (error) => console.log("write error: " + error));
+            .then((result) => console.log("Value written " + JSON.stringify(result)),
+            (error) => console.log("Write error: " + error));
     }
 
     fixPermission(): void {
